@@ -8,5 +8,9 @@
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+	
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+	<DebugType>embedded</DebugType>
+  </PropertyGroup>
 
 </Project>

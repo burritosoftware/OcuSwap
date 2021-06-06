@@ -23,4 +23,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: 'OcuSwap.exe'
-        path: bin/Release/netcoreapp3.1/publish/*.exe
+        path: bin/Release/netcoreapp3.1/publish/*

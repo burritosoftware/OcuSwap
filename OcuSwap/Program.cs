@@ -18,6 +18,24 @@ namespace OcuSwap
             }
         }
 
+        static bool MainMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("Welcome to OcuSwap!\n\nSelect a task:\n1. Change Home environment (Dark Mode)\n2. Adjust Home horizon intensity\n3. Apply Quest 1 Image to Air Link Panel\n4. Exit (typing anything else will exit as well)\n");
+            Console.Write("Type a number and press Enter: ");
+            switch (Console.ReadLine())
+            {
+                case "1":
+                    DarkMode();
+                    return true;
+                case "2":
+                    HorizonChange();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         // This checks if the default Oculus path exists and if so returns that, otherwise asks for the user to input it themselves.
         static string CheckPaths()
         {
@@ -29,21 +47,6 @@ namespace OcuSwap
             {
                 Console.WriteLine("\nLooks like Oculus software isn't installed to the default location.\nPlease enter the location to your Oculus path and press Enter.\nExample: C:\\Program Files\\Oculus");
                 return Console.ReadLine();
-            }
-        }
-
-        static bool MainMenu()
-        {
-            Console.Clear();
-            Console.WriteLine("Welcome to OcuSwap!\n\nSelect a task:\n1. Change Home environment (Dark Mode)\n2. Adjust Home horizon intensity\n3. Apply Quest 1 Image to Air Link Panel\n4. Exit (typing anything else will exit as well)\n");
-            Console.Write("Type a number and press Enter: ");
-            switch (Console.ReadLine())
-            {
-                case "1":
-                    DarkMode();
-                    return true;
-                default:
-                    return false;
             }
         }
 
@@ -64,6 +67,23 @@ namespace OcuSwap
             }
         }
 
+        static void FinishedPrompt()
+        {
+            Console.Clear();
+            Console.WriteLine("We're finished! Open Oculus Home to see your changes.\nWhat would you like to do?\n\n1. Return to main menu\n2. Exit\n");
+            Console.Write("Type a number and press Enter: ");
+            switch (Console.ReadLine())
+            {
+                case "1":
+                    return;
+                case "2":
+                    Environment.Exit(0);
+                    break;
+            }
+        }
+
+        // HERE BEGINS THE TASKS :D
+
         static void DarkMode()
         {
             Console.Clear();
@@ -73,11 +93,11 @@ namespace OcuSwap
             string greyDotsDDS = voidPath + @"\grid_plane_003.dds";
             string lightGridDDS = voidPath + @"\grid_plane_006.dds";
 
-            // Checking if our backup of white grid texture exists
+            // Checking if our backup of white grid texture exists, if not backs up for restoration
             string lightGridDDSBackup = lightGridDDS + ".old";
             if (!System.IO.File.Exists(lightGridDDSBackup))
             {
-                System.IO.File.Copy(lightGridDDS, lightGridDDS + ".old");
+                System.IO.File.Copy(lightGridDDS, lightGridDDSBackup);
             }
 
             string selectedDDS;
@@ -123,19 +143,40 @@ namespace OcuSwap
             FinishedPrompt();
         }
 
-        static void FinishedPrompt()
+        static void HorizonChange()
         {
             Console.Clear();
-            Console.WriteLine("We're finished! Open Oculus Home to see your changes.\nWhat would you like to do?\n\n1. Return to main menu\n2. Exit\n");
+            string voidShaderPath = CheckPaths() + @"\Support\oculus-dash\dash\data\shaders\theVoid\theVoidUniforms.glsl";
+
+            // Backup shader file just in case
+            string voidShaderBackup = voidShaderPath + ".old";
+            if (!System.IO.File.Exists(voidShaderBackup))
+            {
+                System.IO.File.Copy(voidShaderPath, voidShaderBackup);
+            }
+
+            string shaderContents = System.IO.File.ReadAllText(voidShaderPath);
+
+            Console.WriteLine("So, what would you like to change the Oculus Home horizon intensity to to?\n\nSuggested values\n0.0012 - default intensity\n0.00004 - suitable for dark environment (recommended)\n\nDo not type a space or ; in your value or things may break, just the decimal number.\n");
             Console.Write("Type a number and press Enter: ");
+
+            string userSetIntensity = Console.ReadLine();
+            string voidShaderPatched = System.Text.RegularExpressions.Regex.Replace(shaderContents, @"(?<=float u_fogDensity = ).*?(?=;)", userSetIntensity);
+
+            Console.Clear();
+            Console.WriteLine("You have set: " + userSetIntensity);
+            Console.WriteLine("Ready to apply?\n\n1. Apply\n2. Back to main menu");
             switch (Console.ReadLine())
             {
                 case "1":
-                    return;
-                case "2":
-                    System.Environment.Exit(0);
                     break;
+                case "2":
+                    return;
             }
+            KillOculus();
+            System.IO.File.WriteAllText(voidShaderPath, voidShaderPatched);
+            Console.WriteLine("Applying your horizon intensity...");
+            FinishedPrompt();
         }
 
     }

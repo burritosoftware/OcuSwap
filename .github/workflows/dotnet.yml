@@ -7,6 +7,8 @@ on:
       - 'OcuSwap/**'
   pull_request:
     branches: [ master ]
+    paths:
+      - 'OcuSwap/**'
 
 jobs:
   build:

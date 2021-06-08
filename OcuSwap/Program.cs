@@ -76,7 +76,7 @@ namespace OcuSwap
             {
                 case "1":
                     return;
-                case "2":
+                default:
                     Environment.Exit(0);
                     break;
             }
@@ -135,7 +135,7 @@ namespace OcuSwap
             {
                 case "1":
                     break;
-                case "2":
+                default:
                     return;
             }
             KillOculus();
@@ -172,7 +172,7 @@ namespace OcuSwap
             {
                 case "1":
                     break;
-                case "2":
+                default:
                     return;
             }
             KillOculus();

@@ -3,6 +3,8 @@ name: Windows .exe
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'OcuSwap/**'
   pull_request:
     branches: [ master ]
 

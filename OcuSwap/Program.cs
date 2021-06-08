@@ -129,7 +129,8 @@ namespace OcuSwap
 
             Console.Clear();
             Console.WriteLine("You have selected: " + selectedDDSMessage);
-            Console.WriteLine("Ready to apply?\n\n1. Apply\n2. Back to main menu");
+            Console.WriteLine("Ready to apply?\n\n1. Apply\n2. Back to main menu\n");
+            Console.Write("Type a number and press Enter: ");
             switch (Console.ReadLine())
             {
                 case "1":
@@ -165,7 +166,8 @@ namespace OcuSwap
 
             Console.Clear();
             Console.WriteLine("You have set: " + userSetIntensity);
-            Console.WriteLine("Ready to apply?\n\n1. Apply\n2. Back to main menu");
+            Console.WriteLine("Ready to apply?\n\n1. Apply\n2. Back to main menu\n");
+            Console.Write("Type a number and press Enter: ");
             switch (Console.ReadLine())
             {
                 case "1":

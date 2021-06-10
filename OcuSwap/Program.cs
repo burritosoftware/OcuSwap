@@ -36,16 +36,18 @@ namespace OcuSwap
             }
         }
 
-        // This checks if the default Oculus path exists and if so returns that, otherwise asks for the user to input it themselves.
+        // This checks if the Oculus path exists in the registry and if so returns that, otherwise asks for the user to input it themselves.
         static string CheckPaths()
         {
-            if (System.IO.Directory.Exists(@"C:\Program Files\Oculus"))
+            Microsoft.Win32.RegistryKey oculusKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Oculus VR, LLC\Oculus");
+            string basePath = (string)oculusKey.GetValue("Base");
+            if (System.IO.Directory.Exists(basePath))
             {
-                return @"C:\Program Files\Oculus";
+                return basePath;
             }
             else
             {
-                Console.WriteLine("\nLooks like Oculus software isn't installed to the default location.\nPlease enter the location to your Oculus path and press Enter.\nExample: C:\\Program Files\\Oculus");
+                Console.WriteLine("\nLooks like Oculus software isn't installed in a way that we could locate it.\nPlease enter the location to your Oculus path and press Enter.\nExample: C:\\Program Files\\Oculus");
                 return Console.ReadLine();
             }
         }

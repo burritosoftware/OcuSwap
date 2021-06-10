@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace OcuSwap
 {
@@ -39,9 +43,9 @@ namespace OcuSwap
         // This checks if the Oculus path exists in the registry and if so returns that, otherwise asks for the user to input it themselves.
         static string CheckPaths()
         {
-            Microsoft.Win32.RegistryKey oculusKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Oculus VR, LLC\Oculus");
+            RegistryKey oculusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Oculus VR, LLC\Oculus");
             string basePath = (string)oculusKey.GetValue("Base");
-            if (System.IO.Directory.Exists(basePath))
+            if (Directory.Exists(basePath))
             {
                 return basePath;
             }
@@ -56,12 +60,12 @@ namespace OcuSwap
         {
             // Kill Oculus Client before we do anything
             Console.Clear();
-            if (System.Diagnostics.Process.GetProcessesByName("OculusClient").Length > 0)
+            if (Process.GetProcessesByName("OculusClient").Length > 0)
             {
                 Console.WriteLine("Hey! We see the Oculus app is open.\nWe need to close this to apply the patches, so if you're in VR, take off your headset.\n\nPress any key to have us close the client...");
                 Console.ReadKey();
                 Console.WriteLine("We're closing the Oculus Client so we can do our things...");
-                foreach (var process in System.Diagnostics.Process.GetProcessesByName("OculusClient"))
+                foreach (var process in Process.GetProcessesByName("OculusClient"))
                 {
                     process.Kill();
                 }
@@ -97,9 +101,9 @@ namespace OcuSwap
 
             // Checking if our backup of white grid texture exists, if not backs up for restoration
             string lightGridDDSBackup = lightGridDDS + ".old";
-            if (!System.IO.File.Exists(lightGridDDSBackup))
+            if (!File.Exists(lightGridDDSBackup))
             {
-                System.IO.File.Copy(lightGridDDS, lightGridDDSBackup);
+                File.Copy(lightGridDDS, lightGridDDSBackup);
             }
 
             string selectedDDS;
@@ -142,7 +146,7 @@ namespace OcuSwap
             }
             KillOculus();
             Console.WriteLine("Applying your selected environment...");
-            System.IO.File.Copy(selectedDDS, lightGridDDS, true);
+            File.Copy(selectedDDS, lightGridDDS, true);
             FinishedPrompt();
         }
 
@@ -153,18 +157,18 @@ namespace OcuSwap
 
             // Backup shader file just in case
             string voidShaderBackup = voidShaderPath + ".old";
-            if (!System.IO.File.Exists(voidShaderBackup))
+            if (!File.Exists(voidShaderBackup))
             {
-                System.IO.File.Copy(voidShaderPath, voidShaderBackup);
+                File.Copy(voidShaderPath, voidShaderBackup);
             }
 
-            string shaderContents = System.IO.File.ReadAllText(voidShaderPath);
+            string shaderContents = File.ReadAllText(voidShaderPath);
 
             Console.WriteLine("So, what would you like to change the Oculus Home horizon intensity to to?\n\nSuggested values\n0.0012 - default intensity\n0.00004 - suitable for dark environment (recommended)\n\nDo not type a space or ; in your value or things may break, just the decimal number.\n");
             Console.Write("Type a number and press Enter: ");
 
             string userSetIntensity = Console.ReadLine();
-            string voidShaderPatched = System.Text.RegularExpressions.Regex.Replace(shaderContents, @"(?<=float u_fogDensity = ).*?(?=;)", userSetIntensity);
+            string voidShaderPatched = Regex.Replace(shaderContents, @"(?<=float u_fogDensity = ).*?(?=;)", userSetIntensity);
 
             Console.Clear();
             Console.WriteLine("You have set: " + userSetIntensity);
@@ -178,7 +182,7 @@ namespace OcuSwap
                     return;
             }
             KillOculus();
-            System.IO.File.WriteAllText(voidShaderPath, voidShaderPatched);
+            File.WriteAllText(voidShaderPath, voidShaderPatched);
             Console.WriteLine("Applying your horizon intensity...");
             FinishedPrompt();
         }

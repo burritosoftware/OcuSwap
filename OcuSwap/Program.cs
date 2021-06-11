@@ -58,14 +58,14 @@ namespace OcuSwap
 
         static void KillOculus()
         {
-            // Kill Oculus Client before we do anything
+            // Kill Oculus Dash before we do anything
             Console.Clear();
-            if (Process.GetProcessesByName("OculusClient").Length > 0)
+            if (Process.GetProcessesByName("OculusDash").Length > 0)
             {
-                Console.WriteLine("Hey! We see the Oculus app is open.\nWe need to close this to apply the patches, so if you're in VR, take off your headset.\n\nPress any key to have us close the client...");
+                Console.WriteLine("Hey! We see the Oculus Dashboard is open.\nWe need to close this to apply the patches, so if you're in VR, take off your headset.\n\nPress any key to have us close the Oculus Dashboard...");
                 Console.ReadKey();
-                Console.WriteLine("We're closing the Oculus Client so we can do our things...");
-                foreach (var process in Process.GetProcessesByName("OculusClient"))
+                Console.WriteLine("We're closing the Oculus Dashboard so we can do our things...");
+                foreach (var process in Process.GetProcessesByName("OculusDash"))
                 {
                     process.Kill();
                 }

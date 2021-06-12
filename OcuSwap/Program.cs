@@ -30,11 +30,9 @@ namespace OcuSwap
             switch (Console.ReadLine())
             {
                 case "1":
-                    DarkMode();
-                    return true;
+                    return DarkMode();
                 case "2":
-                    HorizonChange();
-                    return true;
+                    return HorizonChange();
                 default:
                     return false;
             }
@@ -73,7 +71,7 @@ namespace OcuSwap
             }
         }
 
-        static void FinishedPrompt()
+        static bool FinishedPrompt()
         {
             Console.Clear();
             Console.WriteLine("We're finished! Open Oculus Home to see your changes.\nWhat would you like to do?\n\n1. Return to main menu\n2. Exit\n");
@@ -81,16 +79,15 @@ namespace OcuSwap
             switch (Console.ReadLine())
             {
                 case "1":
-                    return;
+                    return true;
                 default:
-                    Environment.Exit(0);
-                    break;
+                    return false;
             }
         }
 
         // HERE BEGINS THE TASKS :D
 
-        static void DarkMode()
+        static bool DarkMode()
         {
             Console.Clear();
             string voidPath = CheckPaths() + @"\Support\oculus-dash\dash\assets\raw\textures\environment\the_void";
@@ -130,7 +127,7 @@ namespace OcuSwap
                     selectedDDSMessage = "Restore white grid";
                     break;
                 default:
-                    return;
+                    return true;
             }
 
             Console.Clear();
@@ -142,15 +139,15 @@ namespace OcuSwap
                 case "1":
                     break;
                 default:
-                    return;
+                    return true;
             }
             KillOculus();
             Console.WriteLine("Applying your selected environment...");
             File.Copy(selectedDDS, lightGridDDS, true);
-            FinishedPrompt();
+            return FinishedPrompt();
         }
 
-        static void HorizonChange()
+        static bool HorizonChange()
         {
             Console.Clear();
             string voidShaderPath = CheckPaths() + @"\Support\oculus-dash\dash\data\shaders\theVoid\theVoidUniforms.glsl";
@@ -179,12 +176,12 @@ namespace OcuSwap
                 case "1":
                     break;
                 default:
-                    return;
+                    return true;
             }
             KillOculus();
             File.WriteAllText(voidShaderPath, voidShaderPatched);
             Console.WriteLine("Applying your horizon intensity...");
-            FinishedPrompt();
+            return FinishedPrompt();
         }
 
     }

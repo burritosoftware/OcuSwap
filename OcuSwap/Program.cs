@@ -149,7 +149,6 @@ namespace OcuSwap
 
         static bool HorizonChange()
         {
-            Console.Clear();
             string voidShaderPath = CheckPaths() + @"\Support\oculus-dash\dash\data\shaders\theVoid\theVoidUniforms.glsl";
 
             // Backup shader file just in case
@@ -161,10 +160,17 @@ namespace OcuSwap
 
             string shaderContents = File.ReadAllText(voidShaderPath);
 
-            Console.WriteLine("So, what would you like to change the Oculus Home horizon intensity to to?\n\nSuggested values\n0.0012 - default intensity\n0.00004 - suitable for dark environment (recommended)\n\nDo not type a space or ; in your value or things may break, just the decimal number.\n");
-            Console.Write("Type a number and press Enter: ");
+            string userSetIntensity;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("So, what would you like to change the Oculus Home horizon intensity to to?\n\nSuggested values\n0.0012 - default intensity\n0.00004 - suitable for dark environment (recommended)\n\nEnter your value as a decimal number with \".\" as the seperator.\n");
+                Console.Write("Type a number and press Enter: ");
 
-            string userSetIntensity = Console.ReadLine();
+                userSetIntensity = Console.ReadLine();
+                userSetIntensity = Regex.Match(userSetIntensity, @"[+-]?([0-9]*[.])?[0-9]+").ToString();
+            } while (string.IsNullOrEmpty(userSetIntensity));
+
             string voidShaderPatched = Regex.Replace(shaderContents, @"(?<=float u_fogDensity = ).*?(?=;)", userSetIntensity);
 
             Console.Clear();

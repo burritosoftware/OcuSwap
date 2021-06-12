@@ -15,11 +15,11 @@ namespace OcuSwap
             Console.Title = "OcuSwap - 0.1.0";
             Console.WriteLine("OcuSwap is now starting...");
 
-            bool showMenu = true;
-            while (showMenu)
+            bool showMenu;
+            do
             {
                 showMenu = MainMenu();
-            }
+            } while (showMenu);
         }
 
         static bool MainMenu()

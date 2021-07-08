@@ -1,6 +1,6 @@
 # OcuSwap - Oculus Home UI configuration utility
 
-OcuSwap is a small standalone program that you can use to change the light void in Oculus Home to dark, adjust the intensity of the void's horizon, or maybe even change the Air Link image to show a Quest 1 for all the Q1 owners out there.
+OcuSwap is a small standalone program that you can use to change the light void in Oculus Home to dark and adjust the intensity of the void's horizon! Simple console app to prevent having to do this manually.
 
 ## Note
 
